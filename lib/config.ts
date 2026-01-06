@@ -1,9 +1,9 @@
 
 export const CONFIG = {
-    MONGODB_URI: "mongodb+srv://Farhan:farhan999@bookall.udkjq.mongodb.net/?appName=BookAll",
+    MONGODB_URI: process.env.MONGODB_URI || "",
     CLOUDINARY: {
-        CLOUD_NAME: "ducpqt7ki",
-        API_KEY: "378356435966143",
-        API_SECRET: "O599Ln4deQ0ogC_uzThLVPflnDY"
+        CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || "",
+        API_KEY: process.env.CLOUDINARY_API_KEY || "",
+        API_SECRET: process.env.CLOUDINARY_API_SECRET || ""
     }
 };
