@@ -22,7 +22,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
         return <div className="text-center p-10">Certificate not found.</div>;
     }
 
-    const verificationLink = `https://nptel-clone.vercel.app/Ecertificate/${id}`;
+    const verificationLink = `https://nptel-pi.vercel.app/Ecertificate/${id}`;
     const qrCodeDataURL = await QRCode.toDataURL(verificationLink);
 
     return (
