@@ -147,7 +147,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
                             <div className="flex items-center">
                                 <img src="/institutelogo.png" className="h-[58px] w-auto object-contain" alt="Institute Logo" />
                             </div>
-                            <span className="font-sans text-[28px] font-medium text-[#111] tracking-tighter" style={{ fontFamily: '"Roboto Condensed", Arial, sans-serif' }}>{candidate.instituteName}</span>
+
                         </div>
                         <div className="w-[160px]">
                             <img src="/swayam-logo.png" className="w-full" alt="Swayam" />
