@@ -1,22 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --color-nptel-blue: #2b6cb0;
+  --color-nptel-dark-blue: #0f4c81;
+  --color-nptel-purple: #4a154b;
+  --color-nptel-button-blue: #3498db;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
