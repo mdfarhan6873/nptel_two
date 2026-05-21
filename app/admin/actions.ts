@@ -182,7 +182,12 @@ export async function createCandidate(prevState: any, formData: FormData) {
 
         await newCandidate.save();
 
-        return { success: true, message: "Candidate created successfully!" };
+        return { 
+            success: true, 
+            message: "Candidate created successfully!", 
+            candidateId: newCandidate._id.toString(),
+            rollNo: newCandidate.rollNo 
+        };
 
     } catch (error: any) {
         console.error(error);

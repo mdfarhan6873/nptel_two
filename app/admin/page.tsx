@@ -6,6 +6,8 @@ import { createCandidate } from './actions';
 const initialState = {
     success: false,
     message: '',
+    candidateId: '',
+    rollNo: '',
 };
 
 export default function AdminPage() {
@@ -19,6 +21,23 @@ export default function AdminPage() {
                 {state?.message && (
                     <div className={`p-4 mb-4 rounded ${state.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                         {state.message}
+                        
+                        {state.success && state.candidateId && (
+                            <div className="mt-4 flex flex-col items-center justify-center p-4 bg-white border rounded text-black">
+                                <p className="font-bold mb-2">QR Code for {state.rollNo}</p>
+                                <img src={`/api/qr/${state.candidateId}`} alt="QR Code" className="w-48 h-48 border" />
+                                <a 
+                                    href={`/api/qr/${state.candidateId}?download=true`} 
+                                    download={`qr-${state.rollNo}.png`}
+                                    className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block text-center"
+                                >
+                                    Download QR Code
+                                </a>
+                                <p className="text-sm mt-2 text-gray-600 text-center">
+                                    Download this QR code and add it to the user's certificate before printing.
+                                </p>
+                            </div>
+                        )}
                     </div>
                 )}
 

@@ -22,7 +22,12 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
         return <div className="text-center p-10">Certificate not found.</div>;
     }
 
-    const verificationLink = `https://nptel-pi.vercel.app/Ecertificate/${id}`;
+    const headersList = await import('next/headers').then(m => m.headers());
+    const host = headersList.get('host') || 'localhost:3000';
+    const protocol = host.includes('localhost') ? 'http' : 'https';
+    const domain = `${protocol}://${host}`;
+
+    const verificationLink = `${domain}/Ecertificate/${id}`;
     const qrCodeDataURL = await QRCode.toDataURL(verificationLink);
 
     return (
