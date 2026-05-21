@@ -32,7 +32,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
 
     return (
         <CertificateScaler>
-            <div className="bg-white w-[900px] h-[640px] relative text-[#333] font-serif border-[4px] border-[#d4af37] shadow-xl">
+            <div className="bg-white w-[900px] h-[640px] relative text-[#333] font-serif shadow-xl">
 
                 {/* Elite Label - Precise Trapezoid (Inverted: Bigger Side on Top) */}
                 {(candidate.finalScore >= 60 && candidate.certificateType?.includes('Elite')) && (
@@ -65,20 +65,20 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
 
                 {/* Content Body */}
                 <div className="text-center mt-3 space-y-0.5 px-16 relative z-10">
-                    <p className="text-[15px] italic font-serif" style={{ fontFamily: '"Libre Baskerville", Georgia, serif' }}>This certificate is awarded to</p>
+                    <p className="text-[15px] font-serif" style={{ fontFamily: '"Libre Baskerville", Georgia, serif' }}>This certificate is awarded to</p>
 
                     <h2 className="text-[1.2rem] font-bold text-[#111] uppercase tracking-normal py-0.5" style={{ fontFamily: 'Arial, sans-serif' }}>
                         {candidate.name}
                     </h2>
 
-                    <p className="text-[15px] italic font-serif" style={{ fontFamily: '"Libre Baskerville", Georgia, serif' }}>for successfully completing the course</p>
+                    <p className="text-[15px]  font-serif" style={{ fontFamily: '"Libre Baskerville", Georgia, serif' }}>for successfully completing the course</p>
 
                     <h3 className="text-[1.6rem] font-bold text-[#111] py-0.5" style={{ fontFamily: 'Georgia, serif' }}>
                         {candidate.courseName}
                     </h3>
 
                     <div className="flex justify-center items-center gap-3 text-lg font-bold mt-2" style={{ fontFamily: 'Georgia, serif' }}>
-                        <span className="italic font-normal">with a consolidated score of</span>
+                        <span className="font-normal">with a consolidated score of</span>
                         <span className="text-2xl font-bold font-sans px-1.5">{candidate.finalScore}</span>
                         <span className="text-lg">%</span>
                     </div>
@@ -98,14 +98,14 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
 
                     {/* Regrouped Total Candidates Text with bottom gap */}
                     <div className="pt-2 pb-6">
-                        <p className="text-[15px] italic font-serif" style={{ fontFamily: '"Libre Baskerville", Georgia, serif' }}>
+                        <p className="text-[15px]  font-serif" style={{ fontFamily: '"Libre Baskerville", Georgia, serif' }}>
                             Total number of candidates certified in this course: <span className="font-bold font-sans not-italic">{candidate.totalCandidates}</span>
                         </p>
                     </div>
                 </div>
 
                 {/* Photo (Positioned relative to container) */}
-                <div className="absolute top-[145px] right-[40px] border-[1px] border-gray-400 p-[2px] bg-white">
+                <div className="absolute top-[120px] right-[40px] p-[2px] bg-white">
                     <img src={candidate.profileImage || "/placeholder-user.jpg"} className="w-[100px] h-[130px] object-cover" alt="Candidate" />
                 </div>
 
@@ -115,7 +115,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
                     <div className="text-center w-[230px] min-h-[95px] flex flex-col justify-end">
                         {candidate.signature1?.image && (
                             <>
-                                <div className="h-12 mb-2 flex items-end justify-center">
+                                <div className="h-12  mb-2 flex items-end justify-center">
                                     <img src={candidate.signature1.image} className="max-h-full mix-blend-multiply" alt="Signature" />
                                 </div>
                                 <p className="font-bold text-[13px] leading-tight text-[#111]">{candidate.signature1?.name}</p>
@@ -163,12 +163,12 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
                     <div className="bg-[#a52a2a] text-white h-[48px] flex items-center justify-between px-10 text-[14px] font-sans">
                         <div className="flex items-center gap-1">
                             <span className="font-medium text-[#eee]">Roll No:</span>
-                            <span className="uppercase tracking-widest font-bold text-[15px]">{candidate.rollNo}</span>
+                            <span className="uppercase tracking-widest text-[15px]">{candidate.rollNo}</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="font-normal text-[13px] text-[#eee]">To verify the certificate</span>
-                            <div className="bg-white p-[2px] rounded-[1px]">
-                                <img src={qrCodeDataURL} className="w-[38px] h-[38px]" alt="QR Code" />
+                            <div className="bg-white flex justify-center items-center w-[40px] h-[40px]">
+                                <img src={qrCodeDataURL} className="w-full h-full" alt="QR Code" />
                             </div>
                         </div>
                         <div className="font-sans text-[13px] text-[#eee]">
