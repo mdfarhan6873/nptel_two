@@ -63,10 +63,14 @@ export async function createCandidate(prevState: any, formData: FormData) {
             const arrayBuffer = await certificatePdf.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
 
-            // Wrap stream upload in promise, setting resource_type to auto for PDFs
+            // Wrap stream upload in promise, setting resource_type to raw for PDFs
             const uploadResponse: any = await new Promise((resolve, reject) => {
                 const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "nptel-certificates", resource_type: "auto" },
+                    { 
+                        folder: "nptel-certificates", 
+                        resource_type: "raw",
+                        public_id: `${rollNo}.pdf`
+                    },
                     (error, result) => {
                         if (error) reject(error);
                         else resolve(result);
