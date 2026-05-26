@@ -12,7 +12,7 @@ export default function VerificationPage() {
         if (hash) {
             const rNo = hash.substring(1); // Remove the '#' character
             setRollNo(rNo);
-            
+
             // Fetch candidate info to get the PDF URL
             fetch(`/api/candidate/${rNo}`)
                 .then(res => res.json())
@@ -39,11 +39,11 @@ export default function VerificationPage() {
     return (
         <div className="min-h-screen bg-[#525659] flex flex-col items-center justify-center m-0 p-0" style={{ backgroundColor: '#525659' }}>
             {pdfUrl ? (
-                <a 
+                <a
                     href={pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-[#337ab7] hover:bg-[#286090] text-white px-6 py-3 rounded-[3px] text-lg font-sans border border-[#2e6da4] inline-block shadow-sm"
+                    className="bg-[#337ab7] hover:bg-[#286090] text-white px-6 py-1 rounded-[10px] text-lg font-sans border border-[#2e6da4] inline-block shadow-sm"
                     style={{ textDecoration: 'none' }}
                 >
                     Course Certificate
