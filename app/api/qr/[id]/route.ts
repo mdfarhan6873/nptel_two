@@ -1,17 +1,22 @@
 import QRCode from 'qrcode';
 import { NextRequest, NextResponse } from 'next/server';
+import Candidate from '../../../../models/Candidate';
+import dbConnect from '../../../../lib/db';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await params;
-        
+
         // Get the host from request to make the URL dynamic
         const host = request.headers.get('host');
         const protocol = host?.includes('localhost') ? 'http' : 'https';
         const domain = `${protocol}://${host}`;
-        
-        const verificationLink = `${domain}/Ecertificate/${id}`;
-        
+
+        await dbConnect();
+        const candidate = await Candidate.findById(id);
+        const rollNo = candidate ? candidate.rollNo : id;
+
+        const verificationLink = `${domain}/noc/E_Certificate/#${rollNo}`;
         // Generate QR Code as a buffer
         const qrBuffer = await QRCode.toBuffer(verificationLink, {
             type: 'png',

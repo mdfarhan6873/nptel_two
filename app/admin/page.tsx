@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { createCandidate } from './actions';
 
 const initialState = {
@@ -12,6 +12,17 @@ const initialState = {
 
 export default function AdminPage() {
     const [state, formAction] = useActionState(createCandidate as any, initialState);
+    const [rollNo, setRollNo] = useState('');
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && file.name) {
+            const filename = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
+            if (filename && !filename.includes(' ')) {
+                setRollNo(filename);
+            }
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 p-8 font-sans">
@@ -60,9 +71,10 @@ export default function AdminPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
                             <input type="date" name="dob" className="w-full border p-2 rounded" />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
-                            <input type="file" name="profileImage" accept="image/*" required className="w-full border p-2 rounded" />
+                        <div className="col-span-1 md:col-span-2 bg-green-50 p-4 border border-green-200 rounded">
+                            <label className="block text-sm font-bold text-green-800 mb-1">Final Certificate PDF</label>
+                            <input type="file" name="certificatePdf" accept="application/pdf" required className="w-full border p-2 rounded bg-white" onChange={handleFileChange} />
+                            <p className="text-xs text-green-700 mt-1">Upload the finalized PDF document here. This is the exact file the user will see when they click "Course Certificate".</p>
                         </div>
                     </div>
 
@@ -76,7 +88,7 @@ export default function AdminPage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Roll Number (Leave empty to auto-generate)</label>
-                                <input type="text" name="rollNo" className="w-full border p-2 rounded" placeholder="NPTEL26HS... (Optional)" />
+                                <input type="text" name="rollNo" className="w-full border p-2 rounded" placeholder="NPTEL26HS... (Optional)" value={rollNo} onChange={(e) => setRollNo(e.target.value)} />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Timeline</label>
@@ -121,42 +133,7 @@ export default function AdminPage() {
                         </div>
                     </div>
 
-                    {/* Signatures */}
-                    <div className="bg-yellow-50 p-4 rounded border border-yellow-200">
-                        <h3 className="text-lg font-semibold mb-4 text-[#b22222]">Signature 1 (Left)</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Signer Name</label>
-                                <input type="text" name="sig1Name" className="w-full border p-2 rounded" placeholder="Prof. Kaushik Ghosh" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Designation (Use &lt;br/&gt; for new lines)</label>
-                                <input type="text" name="sig1Designation" className="w-full border p-2 rounded" placeholder="Professor(Chemistry)<br/>Coordinator CEC" />
-                            </div>
-                            <div className="col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Signature Image</label>
-                                <input type="file" name="sig1Image" accept="image/*" className="w-full border p-2 rounded" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-yellow-50 p-4 rounded border border-yellow-200">
-                        <h3 className="text-lg font-semibold mb-4 text-[#b22222]">Signature 2 (Right)</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Signer Name</label>
-                                <input type="text" name="sig2Name" className="w-full border p-2 rounded" placeholder="Prof. Ranjana Pathania" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Designation (Use &lt;br/&gt; for new lines)</label>
-                                <input type="text" name="sig2Designation" className="w-full border p-2 rounded" placeholder="Professor (BSBE)<br/>Coordinator (NPTEL)" />
-                            </div>
-                            <div className="col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Signature Image</label>
-                                <input type="file" name="sig2Image" accept="image/*" className="w-full border p-2 rounded" />
-                            </div>
-                        </div>
-                    </div>
+                    {/* Signatures removed for manual PDF upload mode */}
 
                     <div className="flex justify-end">
                         <button type="submit" className="bg-[#2a6db1] text-white px-8 py-3 rounded hover:bg-[#1e5c99] font-bold">

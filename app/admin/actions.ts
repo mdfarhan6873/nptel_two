@@ -23,17 +23,29 @@ export async function createCandidate(prevState: any, formData: FormData) {
         let rollNo = formData.get('rollNo') as string;
         const timeline = formData.get('timeline') as string;
         const courseDuration = formData.get('courseDuration') as string;
+        const certificatePdf = formData.get('certificatePdf') as File;
 
         // Auto-generate Roll Number if empty
         if (!rollNo || rollNo.trim() === "" || rollNo === "Auto-generated") {
-            // Try to extract year from timeline (e.g., "Jul-Oct 2025")
-            let year = new Date().getFullYear().toString().slice(-2);
-            const yearMatch = timeline.match(/\d{4}/);
-            if (yearMatch) {
-                year = yearMatch[0].slice(-2);
+            // Try to use the PDF filename as the roll number first
+            if (certificatePdf && certificatePdf.name) {
+                const filename = certificatePdf.name.replace(/\.[^/.]+$/, ""); // Remove extension
+                // Simple check to ensure it's not a generic name like "document" or has spaces
+                if (filename && !filename.includes(' ')) {
+                    rollNo = filename;
+                }
             }
-            const randomSuffix = Math.random().toString(36).substring(2, 11).toUpperCase(); // slightly shorter suffix
-            rollNo = `NPTEL${year}HS${randomSuffix}`;
+
+            // If it's still empty, auto-generate a random one
+            if (!rollNo || rollNo.trim() === "" || rollNo === "Auto-generated") {
+                let year = new Date().getFullYear().toString().slice(-2);
+                const yearMatch = timeline.match(/\d{4}/);
+                if (yearMatch) {
+                    year = yearMatch[0].slice(-2);
+                }
+                const randomSuffix = Math.random().toString(36).substring(2, 11).toUpperCase();
+                rollNo = `NPTEL${year}HS${randomSuffix}`;
+            }
         }
 
         const dob = formData.get('dob') as string;
@@ -44,18 +56,17 @@ export async function createCandidate(prevState: any, formData: FormData) {
         const assignmentScores = assignmentScoresStr.split(',').map(s => Number(s.trim()));
 
         const examScore = Number(formData.get('examScore'));
-        const profileImage = formData.get('profileImage') as File;
 
-        // Upload Image
-        let profileImageUrl = "";
-        if (profileImage && profileImage.size > 0) {
-            const arrayBuffer = await profileImage.arrayBuffer();
+        // Upload PDF Document
+        let certificatePdfUrl = "";
+        if (certificatePdf && certificatePdf.size > 0) {
+            const arrayBuffer = await certificatePdf.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
 
-            // Wrap stream upload in promise
+            // Wrap stream upload in promise, setting resource_type to auto for PDFs
             const uploadResponse: any = await new Promise((resolve, reject) => {
                 const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "nptel-candidates" },
+                    { folder: "nptel-certificates", resource_type: "auto" },
                     (error, result) => {
                         if (error) reject(error);
                         else resolve(result);
@@ -63,50 +74,7 @@ export async function createCandidate(prevState: any, formData: FormData) {
                 );
                 uploadStream.end(buffer);
             });
-            profileImageUrl = uploadResponse.secure_url;
-        }
-
-        // Upload Signatures
-        const sig1Image = formData.get('sig1Image') as File;
-        const sig1Name = formData.get('sig1Name') as string;
-        const sig1Designation = formData.get('sig1Designation') as string;
-
-        const sig2Image = formData.get('sig2Image') as File;
-        const sig2Name = formData.get('sig2Name') as string;
-        const sig2Designation = formData.get('sig2Designation') as string;
-
-        let sig1ImageUrl = "";
-        if (sig1Image && sig1Image.size > 0) {
-            const arrayBuffer = await sig1Image.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
-            const uploadResponse: any = await new Promise((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "nptel-signatures" },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result);
-                    }
-                );
-                uploadStream.end(buffer);
-            });
-            sig1ImageUrl = uploadResponse.secure_url;
-        }
-
-        let sig2ImageUrl = "";
-        if (sig2Image && sig2Image.size > 0) {
-            const arrayBuffer = await sig2Image.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
-            const uploadResponse: any = await new Promise((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "nptel-signatures" },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result);
-                    }
-                );
-                uploadStream.end(buffer);
-            });
-            sig2ImageUrl = uploadResponse.secure_url;
+            certificatePdfUrl = uploadResponse.secure_url;
         }
 
         // Calculation Logic (Simplified based on screenshots/request)
@@ -154,7 +122,7 @@ export async function createCandidate(prevState: any, formData: FormData) {
             name,
             email,
             password,
-            profileImage: profileImageUrl,
+            certificatePdfUrl,
             dob,
             courseName,
             rollNo,
@@ -168,16 +136,6 @@ export async function createCandidate(prevState: any, formData: FormData) {
             creditsRecommended,
             totalCandidates,
             instituteName,
-            signature1: {
-                image: sig1ImageUrl,
-                name: sig1Name,
-                designation: sig1Designation
-            },
-            signature2: {
-                image: sig2ImageUrl,
-                name: sig2Name,
-                designation: sig2Designation
-            }
         });
 
         await newCandidate.save();

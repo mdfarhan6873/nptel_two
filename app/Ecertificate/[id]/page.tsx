@@ -27,7 +27,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
     const protocol = host.includes('localhost') ? 'http' : 'https';
     const domain = `${protocol}://${host}`;
 
-    const verificationLink = `${domain}/Ecertificate/${id}`;
+    const verificationLink = `${domain}/noc/E_Certificate/#${candidate.rollNo}`;
     const qrCodeDataURL = await QRCode.toDataURL(verificationLink);
 
     return (
@@ -115,8 +115,8 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
                     <div className="text-center w-[230px] min-h-[95px] flex flex-col justify-end">
                         {candidate.signature1?.image && (
                             <>
-                                <div className="h-12  mb-2 flex items-end justify-center">
-                                    <img src={candidate.signature1.image} className="max-h-full mix-blend-multiply" alt="Signature" />
+                                <div className="h-12 mb-2 flex items-end justify-center">
+                                    <img src={candidate.signature1.image} className="max-h-full mix-blend-multiply " alt="Signature" />
                                 </div>
                                 <p className="font-bold text-[13px] leading-tight text-[#111]">{candidate.signature1?.name}</p>
                                 <div className="text-[10px] text-gray-800 leading-tight mt-0.5" dangerouslySetInnerHTML={{ __html: candidate.signature1?.designation || "" }} />
