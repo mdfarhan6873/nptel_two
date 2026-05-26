@@ -57,28 +57,12 @@ export async function createCandidate(prevState: any, formData: FormData) {
 
         const examScore = Number(formData.get('examScore'));
 
-        // Upload PDF Document
-        let certificatePdfUrl = "";
+        // Save PDF Document directly to MongoDB as Base64 to bypass Cloudinary's strict PDF blocking
+        let certificatePdfBase64 = "";
         if (certificatePdf && certificatePdf.size > 0) {
             const arrayBuffer = await certificatePdf.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
-
-            // Wrap stream upload in promise, setting resource_type to raw for PDFs
-            const uploadResponse: any = await new Promise((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { 
-                        folder: "nptel-certificates", 
-                        resource_type: "raw",
-                        public_id: `${rollNo}.pdf`
-                    },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result);
-                    }
-                );
-                uploadStream.end(buffer);
-            });
-            certificatePdfUrl = uploadResponse.secure_url;
+            certificatePdfBase64 = buffer.toString('base64');
         }
 
         // Calculation Logic (Simplified based on screenshots/request)
@@ -126,7 +110,7 @@ export async function createCandidate(prevState: any, formData: FormData) {
             name,
             email,
             password,
-            certificatePdfUrl,
+            certificatePdfBase64,
             dob,
             courseName,
             rollNo,

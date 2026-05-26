@@ -26,6 +26,7 @@ const CandidateSchema = new mongoose.Schema({
     totalCandidates: { type: Number }, // For "Total number of candidates certified in this course"
     instituteName: { type: String, default: "Indian Institute of Technology Roorkee" },
     certificatePdfUrl: { type: String }, // Cloudinary URL for the uploaded static PDF
+    certificatePdfBase64: { type: String }, // Base64 encoded PDF stored directly in MongoDB
 
     // Signature/Admin uploads
     signature1: {

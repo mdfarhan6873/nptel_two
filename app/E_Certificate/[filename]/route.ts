@@ -12,12 +12,35 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         await dbConnect();
         const candidate = await Candidate.findOne({ rollNo });
 
-        if (!candidate || !candidate.certificatePdfUrl) {
+        if (!candidate || (!candidate.certificatePdfUrl && !candidate.certificatePdfBase64)) {
             return new NextResponse('Certificate not found.', { status: 404 });
         }
 
-        // Redirect directly to the Cloudinary PDF URL
-        return NextResponse.redirect(candidate.certificatePdfUrl);
+        let pdfBuffer: Buffer;
+
+        if (candidate.certificatePdfBase64) {
+            // New method: Serve directly from MongoDB Base64 string
+            pdfBuffer = Buffer.from(candidate.certificatePdfBase64, 'base64');
+        } else {
+            // Legacy method for older candidates: Fetch from Cloudinary
+            const pdfResponse = await fetch(candidate.certificatePdfUrl);
+            if (!pdfResponse.ok) {
+                return new NextResponse('Failed to fetch certificate from storage.', { status: 502 });
+            }
+            pdfBuffer = Buffer.from(await pdfResponse.arrayBuffer());
+        }
+
+        // Convert Node Buffer to standard Web API Uint8Array to satisfy TypeScript BodyInit types
+        const body = new Uint8Array(pdfBuffer);
+
+        return new NextResponse(body, {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': `inline; filename="${filename}"`,
+                'Cache-Control': 'public, max-age=31536000, immutable',
+            },
+        });
     } catch (error) {
         console.error('Error fetching certificate:', error);
         return new NextResponse('Internal Server Error', { status: 500 });

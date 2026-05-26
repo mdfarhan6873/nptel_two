@@ -14,7 +14,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             return NextResponse.json({ error: 'Candidate not found' }, { status: 404 });
         }
 
-        return NextResponse.json({ certificatePdfUrl: candidate.certificatePdfUrl }, { status: 200 });
+        return NextResponse.json({ certificatePdfUrl: `/E_Certificate/${rollNo}.pdf` }, { status: 200 });
     } catch (error) {
         console.error('Error fetching candidate:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
