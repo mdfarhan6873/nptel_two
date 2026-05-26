@@ -52,7 +52,7 @@ export default function AdminPage() {
                     </div>
                 )}
 
-                <form action={formAction} className="space-y-6">
+                <form action={formAction} className="space-y-6" encType="multipart/form-data">
                     {/* Personal Details */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
